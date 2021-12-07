@@ -1,12 +1,12 @@
 FROM golang:1.17.2-alpine3.14
 
-COPY ./src/api/go.mod /go/src/api/go.mod
-COPY ./src/api/go.sum /go/src/api/go.sum
+COPY ./src/go.mod /go/src/go.mod
+COPY ./src/go.sum /go/src/go.sum
 
 RUN apk update \
   && apk add --no-cache git
 
-WORKDIR /go/src/api
+WORKDIR /go/src
 RUN go mod download
 
-COPY src/api/ /go/src/api/
+COPY src/ /go/src/
