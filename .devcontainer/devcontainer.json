@@ -20,7 +20,7 @@
 		"go.gocodeAutoBuild": true,
 		"go.formatTool": "gofmt",
 		"go.useLanguageServer": true,
-		"editor.formatOnSave": false,
+		"editor.formatOnSave": true,
 		"[go]": {
 			"editor.formatOnSave": true
 		}
