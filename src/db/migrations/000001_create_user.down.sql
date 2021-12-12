@@ -1,3 +1,3 @@
 DROP TABLE IF EXISTS
-    go_database.user;
+    go_database.users;
     

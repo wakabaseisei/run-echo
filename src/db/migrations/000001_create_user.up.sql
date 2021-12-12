@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS
-    go_database.user(
+    go_database.users(
         id serial,
         sex int NOT NULL,
         introduction VARCHAR(255) NOT NULL,
