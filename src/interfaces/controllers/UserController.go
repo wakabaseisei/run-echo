@@ -7,20 +7,20 @@ import (
 	"github.com/wakabaseisei/runapp/usecase"
 )
 
-type ArticlesController struct {
-	Interactor usecase.ArticleInteractor
+type UserController struct {
+	Interactor usecase.UserInteractor
 }
 
-func NewArticlesController(db database.DB) *ArticlesController {
-	return &ArticlesController{
-		Interactor: usecase.ArticleInteractor{
-			DB:                &database.DBRepository{DB: db},
-			ArticleRepository: &database.ArticleRepository{},
+func NewUserController(db database.DB) *UserController {
+	return &UserController{
+		Interactor: usecase.UserInteractor{
+			DB:             &database.DBRepository{DB: db},
+			UserRepository: &database.UserRepository{},
 		},
 	}
 }
 
-func (controller *ArticlesController) Get(c Context) {
+func (controller *UserController) Get(c Context) {
 
 	id, _ := strconv.Atoi(c.Param("id"))
 
