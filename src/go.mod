@@ -15,6 +15,7 @@ require (
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
 	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/ClickHouse/clickhouse-go v1.4.3 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
 	github.com/apache/arrow/go/arrow v0.0.0-20211013220434-5962184e7a30 // indirect
 	github.com/aws/aws-sdk-go v1.17.7 // indirect
 	github.com/aws/aws-sdk-go-v2 v1.9.2 // indirect
