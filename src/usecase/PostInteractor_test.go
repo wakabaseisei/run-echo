@@ -49,7 +49,7 @@ func TestPostInteractor(t *testing.T) {
 		FakeFindByID: func(db *gorm.DB, id int) (post domain.Post, err error) {
 			post = domain.Post{
 				Id:          1,
-				Title:       "ガラガラへびがやってく",
+				Title:       "ガラガラへびがやってくる",
 				Content:     "お腹を空かせてやってくる",
 				PublishDate: 1640270612610,
 				CreatedAt:   time.Now(),
