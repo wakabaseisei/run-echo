@@ -1,4 +1,5 @@
 FROM golang:1.17.2-alpine3.14
+ENV CGO_ENABLED=0
 
 COPY ./src/go.mod /go/src/go.mod
 COPY ./src/go.sum /go/src/go.sum

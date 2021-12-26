@@ -81,4 +81,8 @@ func TestPostInteractor(t *testing.T) {
 	if post.Content != "お腹を空かせてやってくる" {
 		t.Fatalf("postInteractor.Get() should return Post.Content = %s, but got = %s", "お腹を空かせてやってくる", post.Content)
 	}
+
+	if post.PublishDate != 1640270612610 {
+		t.Fatalf("postInteractor.Get() should return Post.PublishDate = 1640270612610, but got = %d", post.PublishDate)
+	}
 }
