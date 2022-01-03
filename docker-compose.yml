@@ -6,6 +6,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/go/Dockerfile
+      target: dev
     ports: # ホストOSのポートとコンテナのポートをつなげる 
       - "8080:8080"
     tty:
