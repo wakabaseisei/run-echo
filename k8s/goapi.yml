@@ -9,7 +9,7 @@ spec:
   ports:
     - port: 8080
       targetPort: goapi-port
-
+      nodePort: 30090
 ---
 apiVersion: apps/v1
 kind: Deployment
