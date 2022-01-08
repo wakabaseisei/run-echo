@@ -50,6 +50,8 @@ spec:
               mountPath: /docker-entrypoint-initdb.d
             - name: mysql-server-conf
               mountPath: /etc/mysql/conf.d
+            - name: mysql-server-data
+              mountPath: /var/lib/mysql
       volumes:
         - name: mysql-server-initdb
           configMap:
@@ -57,6 +59,9 @@ spec:
         - name: mysql-server-conf
           configMap:
             name: mysql-server-conf-config
+        - name: mysql-server-data
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
 ---
 apiVersion: v1
 kind: ConfigMap
