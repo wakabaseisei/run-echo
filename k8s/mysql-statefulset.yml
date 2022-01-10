@@ -65,8 +65,22 @@ spec:
         - name: mysql
           image: mysql@sha256:92ad1d7e3f8eb7e67d35bf251912fb7cd12676a601dc90b6beb1aece7c1f5073
           env:
-            - name: MYSQL_ALLOW_EMPTY_PASSWORD
-              value: "1"
+            - name: MYSQL_USER
+              value: go_user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mysql_password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mysql_root_password
+            - name: TZ
+              value: Asia/Tokyo
+            - name: MYSQL_DATABASE
+              value: go_database
           ports:
             - name: mysql
               containerPort: 3306
@@ -82,19 +96,32 @@ spec:
               memory: 1Gi
           livenessProbe:
             exec:
-              command: ["mysqladmin", "ping"]
+              command:
+                ["mysqladmin", "ping", "-uroot", "-p$(MYSQL_ROOT_PASSWORD)"]
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
           readinessProbe:
             exec:
               # Check we can execute queries over TCP (skip-networking is off).
-              command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
+              command:
+                ["mysqladmin", "ping", "-uroot", "-p$(MYSQL_ROOT_PASSWORD)"]
             initialDelaySeconds: 5
             periodSeconds: 2
             timeoutSeconds: 1
         - name: xtrabackup
           image: gcr.io/google-samples/xtrabackup:1.0
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mysql_password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysecret
+                  key: mysql_root_password
           ports:
             - name: xtrabackup
               containerPort: 3307
@@ -123,14 +150,14 @@ spec:
               # Check if we need to complete a clone by starting replication.
               if [[ -f change_master_to.sql.in ]]; then
                 echo "Waiting for mysqld to be ready (accepting connections)"
-                until mysql -h 127.0.0.1 -e "SELECT 1"; do sleep 1; done
+                until mysql -h 127.0.0.1 -uroot -p$(MYSQL_ROOT_PASSWORD) -e "SELECT 1"; do sleep 1; done
 
                 echo "Initializing replication from clone position"
-                mysql -h 127.0.0.1 \
+                mysql -h 127.0.0.1 -uroot -p$(MYSQL_ROOT_PASSWORD) \
                       -e "$(<change_master_to.sql.in), \
                               MASTER_HOST='mysql-0.mysql', \
                               MASTER_USER='root', \
-                              MASTER_PASSWORD='', \
+                              MASTER_PASSWORD='$(MYSQL_ROOT_PASSWORD)', \
                               MASTER_CONNECT_RETRY=10; \
                             START SLAVE;" || exit 1
                 # In case of container restart, attempt this at-most-once.
@@ -139,7 +166,7 @@ spec:
 
               # Start a server to send backups when requested by peers.
               exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
-                "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root"
+                "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root --password=$(MYSQL_ROOT_PASSWORD)"
           volumeMounts:
             - name: data
               mountPath: /var/lib/mysql
