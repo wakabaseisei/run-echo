@@ -24,12 +24,12 @@ func NewConfig() *Config {
 
 	c := new(Config)
 
-	c.DB.Production.Host = "mysql-server"
+	c.DB.Production.Host = "mysql-read"
 	c.DB.Production.Username = "go_user"
 	c.DB.Production.Password = "password"
 	c.DB.Production.DBName = "go_database"
 
-	c.DB.Test.Host = "mysql-server"
+	c.DB.Test.Host = "mysql-read"
 	c.DB.Test.Username = "go_user"
 	c.DB.Test.Password = "password"
 	c.DB.Test.DBName = "go_database"

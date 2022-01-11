@@ -30,6 +30,7 @@ spec:
               # Copy appropriate conf.d files from config-map to emptyDir.
               if [[ $ordinal -eq 0 ]]; then
                 cp /mnt/config-map/master.cnf /mnt/conf.d/
+                cp /mnt/config-map/createdb.sql /mnt/initdb/
               else
                 cp /mnt/config-map/slave.cnf /mnt/conf.d/
               fi
@@ -38,6 +39,8 @@ spec:
               mountPath: /mnt/conf.d
             - name: config-map
               mountPath: /mnt/config-map
+            - name: initdb
+              mountPath: /mnt/initdb
         - name: clone-mysql
           image: gcr.io/google-samples/xtrabackup:1.0
           command:
@@ -90,6 +93,8 @@ spec:
               subPath: mysql
             - name: conf
               mountPath: /etc/mysql/conf.d
+            - name: initdb
+              mountPath: /docker-entrypoint-initdb.d
           resources:
             requests:
               cpu: 500m
@@ -179,6 +184,8 @@ spec:
               memory: 100Mi
       volumes:
         - name: conf
+          emptyDir: {}
+        - name: initdb
           emptyDir: {}
         - name: config-map
           configMap:
