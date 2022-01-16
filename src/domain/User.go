@@ -18,6 +18,12 @@ type UserGet struct {
 	Introduction string `json:"introduction"`
 }
 
+// POSTリクエストで受け取ったJSONをパースする際の構造体
+type UserPost struct {
+	Sex          int    `json:"sex" binding:"required"`
+	Introduction string `json:"introduction" binding:"required"`
+}
+
 func (u *User) BuildForGet() UserGet {
 	user := UserGet{}
 	user.Id = u.Id
