@@ -9,8 +9,10 @@ require (
 )
 
 require (
+	9fans.net/go v0.0.0-20181112161441-237454027057 // indirect
 	github.com/BurntSushi/toml v0.4.1 // indirect
 	github.com/denisenkom/go-mssqldb v0.10.0 // indirect
+	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
@@ -31,6 +33,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/ramya-rao-a/go-outline v0.0.0-20210608161538-9736a4bde949 // indirect
+	github.com/rogpeppe/godef v1.1.2 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/stamblerre/gocode v1.0.0 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
@@ -41,8 +44,8 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20211019181941-9d821ace8654 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.9-0.20211209172050-90a85b2969be // indirect
-	golang.org/x/tools/gopls v0.7.4 // indirect
+	golang.org/x/tools v0.1.9-0.20220114220130-fd7798718afd // indirect
+	golang.org/x/tools/gopls v0.7.5 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect

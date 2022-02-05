@@ -18,6 +18,15 @@ func (repo *UserRepository) FindByID(db *gorm.DB, id int) (user domain.User, err
 	return user, nil
 }
 
+func (repo *UserRepository) FindAll(db *gorm.DB) (users []domain.User, err error) {
+	users = []domain.User{}
+	db.Find(&users)
+	// if users <= 0 {
+	// 	return domain.User{}, errors.New("user is not found")
+	// }
+	return users, nil
+}
+
 func (repo *UserRepository) PostByForm(db *gorm.DB, sex int, introduction string) (user domain.User, err error) {
 	user = domain.User{Sex: sex, Introduction: introduction}
 	result := db.Create(&user)

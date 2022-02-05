@@ -19,6 +19,21 @@ func (interactor *UserInteractor) Get(id int) (user domain.UserGet, resultStatus
 	return user, NewResultStatus(200, nil)
 }
 
+func (interactor *UserInteractor) GetAll() (usersGet []domain.UserGet, resultStatus *ResultStatus) {
+	db := interactor.DB.Connect()
+
+	foundUsers, err := interactor.UserRepository.FindAll(db)
+	if err != nil {
+		return []domain.UserGet{}, NewResultStatus(404, err)
+	}
+	usersGet = []domain.UserGet{}
+
+	for i := range foundUsers {
+		usersGet = append(usersGet, foundUsers[i].BuildForGet())
+	}
+	return usersGet, NewResultStatus(200, nil)
+}
+
 func (interactor *UserInteractor) Post(sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus) {
 	db := interactor.DB.Connect()
 

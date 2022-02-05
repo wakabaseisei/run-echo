@@ -35,6 +35,16 @@ func (controller *UserController) Get(c Context) {
 	c.JSON(res.StatusCode, NewH("success", user))
 }
 
+func (controller *UserController) GetAll(c Context) {
+
+	users, res := controller.Interactor.GetAll()
+	if res.Error != nil {
+		c.JSON(res.StatusCode, NewH(res.Error.Error(), nil))
+		return
+	}
+	c.JSON(res.StatusCode, NewH("success", users))
+}
+
 func (controller *UserController) Post(c Context) {
 	var userPost domain.UserPost
 	if err := c.ShouldBindJSON(&userPost); err != nil {
