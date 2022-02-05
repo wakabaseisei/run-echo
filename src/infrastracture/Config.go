@@ -23,8 +23,8 @@ type Config struct {
 func NewConfig() *Config {
 
 	c := new(Config)
-
-	c.DB.Production.Host = "mysql"
+	
+	c.DB.Production.Host = "mysql-0.mysql"
 	c.DB.Production.Username = "go_user"
 	c.DB.Production.Password = "password"
 	c.DB.Production.DBName = "go_database"
