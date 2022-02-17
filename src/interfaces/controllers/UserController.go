@@ -6,21 +6,23 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/wakabaseisei/runapp/domain"
-	"github.com/wakabaseisei/runapp/interfaces/database"
 	"github.com/wakabaseisei/runapp/usecase"
 )
 
-type UserController struct {
-	Interactor usecase.UserInteractor
+type UserHandler interface {
+	Get(c Context)
+	GetAll(c Context)
+	Post(c Context)
+	Delete(c Context)
+	Update(c Context)
 }
 
-func NewUserController(db database.DB) *UserController {
-	return &UserController{
-		Interactor: usecase.UserInteractor{
-			DB:             &database.DBRepository{DB: db},
-			UserRepository: &database.UserRepository{},
-		},
-	}
+type UserController struct {
+	Interactor usecase.UserUsecase
+}
+
+func NewUserController(usecase usecase.UserUsecase) UserHandler {
+	return &UserController{Interactor: usecase}
 }
 
 func (controller *UserController) Get(c Context) {
