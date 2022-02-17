@@ -1,16 +1,28 @@
 package usecase
 
-import "github.com/wakabaseisei/runapp/domain"
+import (
+	"github.com/wakabaseisei/runapp/domain"
+)
+
+type UserUsecase interface {
+	Get(id int) (user domain.UserGet, resultStatus *ResultStatus)
+	GetAll() (usersGet []domain.UserGet, resultStatus *ResultStatus)
+	Post(sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus)
+	Delete(id int) (user domain.UserGet, resultStatus *ResultStatus)
+	Update(id int, sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus)
+}
 
 type UserInteractor struct {
-	DB             DBRepository
-	UserRepository UserRepository
+	UserRepository UserRepo
+}
+
+func NewUserUsecase(userRepo UserRepo) UserUsecase {
+	return &UserInteractor{UserRepository: userRepo}
 }
 
 func (interactor *UserInteractor) Get(id int) (user domain.UserGet, resultStatus *ResultStatus) {
-	db := interactor.DB.Connect()
 
-	foundUser, err := interactor.UserRepository.FindByID(db, id)
+	foundUser, err := interactor.UserRepository.FindByID(id)
 	if err != nil {
 		return domain.UserGet{}, NewResultStatus(404, err)
 	}
@@ -20,9 +32,8 @@ func (interactor *UserInteractor) Get(id int) (user domain.UserGet, resultStatus
 }
 
 func (interactor *UserInteractor) GetAll() (usersGet []domain.UserGet, resultStatus *ResultStatus) {
-	db := interactor.DB.Connect()
 
-	foundUsers, err := interactor.UserRepository.FindAll(db)
+	foundUsers, err := interactor.UserRepository.FindAll()
 	if err != nil {
 		return []domain.UserGet{}, NewResultStatus(404, err)
 	}
@@ -35,9 +46,8 @@ func (interactor *UserInteractor) GetAll() (usersGet []domain.UserGet, resultSta
 }
 
 func (interactor *UserInteractor) Post(sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus) {
-	db := interactor.DB.Connect()
 
-	createdUser, err := interactor.UserRepository.PostByForm(db, sex, introduction)
+	createdUser, err := interactor.UserRepository.PostByForm(sex, introduction)
 	if err != nil {
 		return domain.UserGet{}, NewResultStatus(404, err)
 	}
@@ -47,9 +57,8 @@ func (interactor *UserInteractor) Post(sex int, introduction string) (user domai
 }
 
 func (interactor *UserInteractor) Delete(id int) (user domain.UserGet, resultStatus *ResultStatus) {
-	db := interactor.DB.Connect()
 
-	foundUser, err := interactor.UserRepository.DeleteByID(db, id)
+	foundUser, err := interactor.UserRepository.DeleteByID(id)
 	if err != nil {
 		return domain.UserGet{}, NewResultStatus(404, err)
 	}
@@ -59,9 +68,8 @@ func (interactor *UserInteractor) Delete(id int) (user domain.UserGet, resultSta
 }
 
 func (interactor *UserInteractor) Update(id int, sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus) {
-	db := interactor.DB.Connect()
 
-	updatedUser, err := interactor.UserRepository.UpdateByID(db, id, sex, introduction)
+	updatedUser, err := interactor.UserRepository.UpdateByID(id, sex, introduction)
 	if err != nil {
 		return domain.UserGet{}, NewResultStatus(404, err)
 	}
