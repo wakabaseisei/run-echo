@@ -5,7 +5,6 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wakabaseisei/runapp/domain"
 	"github.com/wakabaseisei/runapp/usecase"
 )
 
@@ -26,7 +25,6 @@ func NewUserController(usecase usecase.UserUsecase) UserHandler {
 }
 
 func (controller *UserController) Get(c Context) {
-
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	user, res := controller.Interactor.Get(id)
@@ -34,37 +32,44 @@ func (controller *UserController) Get(c Context) {
 		c.JSON(res.StatusCode, NewH(res.Error.Error(), nil))
 		return
 	}
-	c.JSON(res.StatusCode, NewH("success", user))
+	userResponse := ConvertToUserResponse(user)
+	c.JSON(res.StatusCode, NewH("success", userResponse))
 }
 
 func (controller *UserController) GetAll(c Context) {
-
 	users, res := controller.Interactor.GetAll()
 	if res.Error != nil {
 		c.JSON(res.StatusCode, NewH(res.Error.Error(), nil))
 		return
 	}
-	c.JSON(res.StatusCode, NewH("success", users))
+
+	usersResponse := []UserResponse{}
+	for i := range users {
+		usersResponse = append(usersResponse, ConvertToUserResponse(users[i]))
+	}
+
+	c.JSON(res.StatusCode, NewH("success", usersResponse))
 }
 
 func (controller *UserController) Post(c Context) {
-	var userPost domain.UserPost
-	if err := c.ShouldBindJSON(&userPost); err != nil {
+	var jsonRequest UserJsonRequest
+	if err := c.ShouldBindJSON(&jsonRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, res := controller.Interactor.Post(userPost.Sex, userPost.Introduction)
+	user, res := controller.Interactor.Post(jsonRequest.Sex, jsonRequest.Introduction)
 
 	if res.Error != nil {
 		c.JSON(res.StatusCode, NewH(res.Error.Error(), nil))
 		return
 	}
-	c.JSON(res.StatusCode, NewH("user has been created", user))
+
+	userResponse := ConvertToUserResponse(user)
+	c.JSON(res.StatusCode, NewH("user has been created", userResponse))
 }
 
 func (controller *UserController) Delete(c Context) {
-
 	id, _ := strconv.Atoi(c.Param("id"))
 
 	user, res := controller.Interactor.Delete(id)
@@ -72,21 +77,25 @@ func (controller *UserController) Delete(c Context) {
 		c.JSON(res.StatusCode, NewH(res.Error.Error(), nil))
 		return
 	}
-	c.JSON(res.StatusCode, NewH("user has been deleted", user))
+
+	userResponse := ConvertToUserResponse(user)
+	c.JSON(res.StatusCode, NewH("user has been deleted", userResponse))
 }
 
 func (controller *UserController) Update(c Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	var userPost domain.UserPost
-	if err := c.ShouldBindJSON(&userPost); err != nil {
+	var jsonRequest UserJsonRequest
+	if err := c.ShouldBindJSON(&jsonRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user, res := controller.Interactor.Update(id, userPost.Sex, userPost.Introduction)
+	user, res := controller.Interactor.Update(id, jsonRequest.Sex, jsonRequest.Introduction)
 	if res.Error != nil {
 		c.JSON(res.StatusCode, NewH(res.Error.Error(), nil))
 		return
 	}
-	c.JSON(res.StatusCode, NewH("user has been updated", user))
+
+	userResponse := ConvertToUserResponse(user)
+	c.JSON(res.StatusCode, NewH("user has been updated", userResponse))
 }

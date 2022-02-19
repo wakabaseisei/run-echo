@@ -5,11 +5,11 @@ import (
 )
 
 type UserUsecase interface {
-	Get(id int) (user domain.UserGet, resultStatus *ResultStatus)
-	GetAll() (usersGet []domain.UserGet, resultStatus *ResultStatus)
-	Post(sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus)
-	Delete(id int) (user domain.UserGet, resultStatus *ResultStatus)
-	Update(id int, sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus)
+	Get(id int) (user domain.User, resultStatus *ResultStatus)
+	GetAll() (usersGet []domain.User, resultStatus *ResultStatus)
+	Post(sex int, introduction string) (user domain.User, resultStatus *ResultStatus)
+	Delete(id int) (user domain.User, resultStatus *ResultStatus)
+	Update(id int, sex int, introduction string) (user domain.User, resultStatus *ResultStatus)
 }
 
 type UserInteractor struct {
@@ -20,60 +20,52 @@ func NewUserUsecase(userRepo UserRepo) UserUsecase {
 	return &UserInteractor{UserRepository: userRepo}
 }
 
-func (interactor *UserInteractor) Get(id int) (user domain.UserGet, resultStatus *ResultStatus) {
+func (interactor *UserInteractor) Get(id int) (user domain.User, resultStatus *ResultStatus) {
 
-	foundUser, err := interactor.UserRepository.FindByID(id)
+	user, err := interactor.UserRepository.FindByID(id)
 	if err != nil {
-		return domain.UserGet{}, NewResultStatus(404, err)
+		return domain.User{}, NewResultStatus(404, err)
 	}
 
-	user = foundUser.BuildForGet()
 	return user, NewResultStatus(200, nil)
 }
 
-func (interactor *UserInteractor) GetAll() (usersGet []domain.UserGet, resultStatus *ResultStatus) {
+func (interactor *UserInteractor) GetAll() (usersGet []domain.User, resultStatus *ResultStatus) {
 
-	foundUsers, err := interactor.UserRepository.FindAll()
+	users, err := interactor.UserRepository.FindAll()
 	if err != nil {
-		return []domain.UserGet{}, NewResultStatus(404, err)
+		return []domain.User{}, NewResultStatus(404, err)
 	}
-	usersGet = []domain.UserGet{}
 
-	for i := range foundUsers {
-		usersGet = append(usersGet, foundUsers[i].BuildForGet())
-	}
-	return usersGet, NewResultStatus(200, nil)
+	return users, NewResultStatus(200, nil)
 }
 
-func (interactor *UserInteractor) Post(sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus) {
+func (interactor *UserInteractor) Post(sex int, introduction string) (user domain.User, resultStatus *ResultStatus) {
 
-	createdUser, err := interactor.UserRepository.PostByForm(sex, introduction)
+	user, err := interactor.UserRepository.PostByForm(sex, introduction)
 	if err != nil {
-		return domain.UserGet{}, NewResultStatus(404, err)
+		return domain.User{}, NewResultStatus(404, err)
 	}
 
-	user = createdUser.BuildForGet()
 	return user, NewResultStatus(200, nil)
 }
 
-func (interactor *UserInteractor) Delete(id int) (user domain.UserGet, resultStatus *ResultStatus) {
+func (interactor *UserInteractor) Delete(id int) (user domain.User, resultStatus *ResultStatus) {
 
-	foundUser, err := interactor.UserRepository.DeleteByID(id)
+	user, err := interactor.UserRepository.DeleteByID(id)
 	if err != nil {
-		return domain.UserGet{}, NewResultStatus(404, err)
+		return domain.User{}, NewResultStatus(404, err)
 	}
 
-	user = foundUser.BuildForGet()
 	return user, NewResultStatus(200, nil)
 }
 
-func (interactor *UserInteractor) Update(id int, sex int, introduction string) (user domain.UserGet, resultStatus *ResultStatus) {
+func (interactor *UserInteractor) Update(id int, sex int, introduction string) (user domain.User, resultStatus *ResultStatus) {
 
-	updatedUser, err := interactor.UserRepository.UpdateByID(id, sex, introduction)
+	user, err := interactor.UserRepository.UpdateByID(id, sex, introduction)
 	if err != nil {
-		return domain.UserGet{}, NewResultStatus(404, err)
+		return domain.User{}, NewResultStatus(404, err)
 	}
 
-	user = updatedUser.BuildForGet()
 	return user, NewResultStatus(200, nil)
 }
