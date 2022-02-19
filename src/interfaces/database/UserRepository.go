@@ -28,9 +28,7 @@ func (repo *UserRepository) FindByID(id int) (user domain.User, err error) {
 func (repo *UserRepository) FindAll() (users []domain.User, err error) {
 	users = []domain.User{}
 	repo.Conn.Find(&users)
-	// if users <= 0 {
-	// 	return domain.User{}, errors.New("user is not found")
-	// }
+
 	return users, nil
 }
 
