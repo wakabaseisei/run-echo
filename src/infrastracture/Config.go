@@ -34,6 +34,7 @@ func NewConfig() *Config {
 	c := new(Config)
 
 	password := os.Getenv("CLOUD_SQL_PASSWORD")
+	host := os.Getenv("CLOUD_SQL_HOST")
 
 	// GKE用
 	c.DB.Production.Host = "mysql-0.mysql"
@@ -48,7 +49,7 @@ func NewConfig() *Config {
 	c.DB.Dev.DBName = "go_database"
 
 	// Cloud Run用
-	c.DB.Run.Host = "10.65.0.3"
+	c.DB.Run.Host = host
 	c.DB.Run.Username = "go_user"
 	c.DB.Run.Password = password
 	c.DB.Run.DBName = "go_database"
