@@ -41,6 +41,7 @@ func (interactor *UserInteractor) GetAll() (usersGet []domain.User, resultStatus
 }
 
 func (interactor *UserInteractor) Post(sex int, introduction string) (user domain.User, resultStatus *ResultStatus) {
+	// TODO: ここでNewUserしてエラー検出後に、userを作成したものをレポジトリに渡す
 
 	user, err := interactor.UserRepository.PostByForm(sex, introduction)
 	if err != nil {
